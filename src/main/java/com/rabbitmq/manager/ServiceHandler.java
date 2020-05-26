@@ -50,7 +50,10 @@ public class ServiceHandler  extends ChannelInboundHandlerAdapter {
         ByteBuf byteBuf = (ByteBuf) msg;
         logger.debug("message : {} ",byteBuf.toString(Charset.defaultCharset()));
         //채널 파이프라인에 대한 이벤트 처리 writeAndFlush 데이터를 쓰고 버퍼를 전송
-        channels.writeAndFlush(msg);
+        //channels.writeAndFlush(msg);
+        channels.write(msg);
+        //channels.write(msg);
+        channels.flush();
     }
 
 

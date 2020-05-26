@@ -44,7 +44,6 @@ public class Manager {
         		
         System.out.println("instance " + receiver + " [x] Received '"
                 + message.getId() + "'");
-       
         doWork(message.getAfterType());
         watch.stop();
         System.out.println("instance " + receiver + " [x] Done in "
