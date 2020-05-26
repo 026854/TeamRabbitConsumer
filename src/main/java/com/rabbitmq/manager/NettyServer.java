@@ -70,7 +70,9 @@ public class NettyServer {
                         }
                     });
             //ChannelFuture : 비동기 방식의 작업 처리 후 결과를 제어
+            //클라이언트의 요청이 들어올 수 있게 포트를 활성화 시킴
             ChannelFuture channelFuture = b.bind(tcpPort).sync();
+            //서버 소켓이 닫힐 때까지 대기
             channelFuture.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
