@@ -1,5 +1,10 @@
 package com.rabbitmq.manager;
 
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelId;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.util.concurrent.GlobalEventExecutor;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
@@ -7,6 +12,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 
@@ -49,6 +57,16 @@ public class RabbitConfiguration {
 	@Bean
 	public MessageConverter messageConverter() {
 		return new Jackson2JsonMessageConverter();
+	}
+
+	@Bean
+	public Map<String, Channel> channelMap(){
+		return new HashMap<>();
+	}
+
+	@Bean
+	public ChannelGroup ChannelList(){
+		return new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 	}
 
 }

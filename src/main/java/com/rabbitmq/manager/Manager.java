@@ -1,5 +1,6 @@
 package com.rabbitmq.manager;
 
+import io.netty.buffer.ByteBuf;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -21,7 +22,11 @@ public class Manager {
     @Autowired
     private RabbitTemplate template;
     private ObjectMapper objectMapper = new ObjectMapper();
-    
+
+
+    @Autowired
+    private MessageHandler messageHandler;
+
     //@RabbitHandler // 메세지 타입에 따라 메서드 매핑
     @RabbitListener(queues ="high-queue", concurrency = "3")
     public void highReceiver(String message) throws InterruptedException, JsonMappingException, JsonProcessingException {
@@ -46,8 +51,9 @@ public class Manager {
                 + message.getId() + "'");
         doWork(message.getAfterType());
         watch.stop();
-        System.out.println("instance " + receiver + " [x] Done in "
-                + watch.getTotalTimeSeconds() + "s");
+        //System.out.println("instance " + receiver + " [x] Done in "
+        //        + watch.getTotalTimeSeconds() + "s");
+        messageHandler.request(message);
     }
 
     private void doWork(String in) throws InterruptedException {

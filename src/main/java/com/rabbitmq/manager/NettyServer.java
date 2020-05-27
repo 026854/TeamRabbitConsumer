@@ -5,42 +5,38 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.nio.channels.Selector;
 
 @Component
 @PropertySource(value = "classpath:/application.properties")
 public class NettyServer {
 
-    /**
-     * The Tcp port.
-     */
     @Value("${tcp.port}")
     private int tcpPort;
-
-    /**
-     * The Boss count.
-     */
     @Value("${boss.thread.count}")
     private int bossCount;
-
-    /**
-     * The Worker count.
-     */
     @Value("${worker.thread.count}")
     private int workerCount;
 
     /**
      * The constant SERVICE_HANDLER.
      */
-    private static final ServiceHandler SERVICE_HANDLER = new ServiceHandler();
-
+    @Autowired private ServiceHandler serviceHandler;
     /**
      * Start.
      */
@@ -56,6 +52,7 @@ public class NettyServer {
         EventLoopGroup workerGroup = new NioEventLoopGroup(); //스레드 갯수 ;내부 설정에 의해 cpu 코어 수에 따라 설정
 
         try {
+
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)//서버 소켓 입출력 모드를 NIO로 설정
@@ -66,7 +63,8 @@ public class NettyServer {
                             ChannelPipeline pipeline = ch.pipeline();
                             pipeline.addLast(new LoggingHandler(LogLevel.INFO));
                             //핸들러 추가
-                            pipeline.addLast(SERVICE_HANDLER);
+                            pipeline.addLast(serviceHandler);
+
                         }
                     });
             //ChannelFuture : 비동기 방식의 작업 처리 후 결과를 제어
@@ -81,4 +79,5 @@ public class NettyServer {
             workerGroup.shutdownGracefully();
         }
     }
+
 }
