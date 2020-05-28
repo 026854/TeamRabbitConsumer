@@ -1,6 +1,6 @@
 package com.rabbitmq.manager;
 
-import com.rabbitmq.manager.netty.NettyServer;
+import com.rabbitmq.manager.netty_yumi.NettyServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

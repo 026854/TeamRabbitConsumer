@@ -1,4 +1,4 @@
-package com.rabbitmq.manager.netty;
+package com.rabbitmq.manager.netty_yumi;
 
 import com.rabbitmq.manager.vo.Message;
 import io.netty.buffer.ByteBuf;

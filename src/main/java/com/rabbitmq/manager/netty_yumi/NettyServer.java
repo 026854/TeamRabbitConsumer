@@ -1,4 +1,4 @@
-package com.rabbitmq.manager.netty;
+package com.rabbitmq.manager.netty_yumi;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
