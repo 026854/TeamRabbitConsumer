@@ -1,6 +1,6 @@
 package com.rabbitmq.manager.config;
 
-import com.rabbitmq.manager.rabbitmq.Manager;
+import com.rabbitmq.manager.rabbitmq_jieun.Manager;
 import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;

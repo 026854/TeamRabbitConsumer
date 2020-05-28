@@ -1,17 +1,12 @@
-package com.rabbitmq.manager.rabbitmq;
+package com.rabbitmq.manager.rabbitmq_jieun;
 
-import com.rabbitmq.manager.netty.MessageHandler;
-import com.rabbitmq.manager.vo.Message;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StopWatch;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class Manager {
