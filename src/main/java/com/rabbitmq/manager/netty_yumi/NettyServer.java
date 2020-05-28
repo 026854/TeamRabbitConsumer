@@ -8,6 +8,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,10 @@ public class NettyServer {
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
                             pipeline.addLast(new LoggingHandler(LogLevel.INFO));
+                            //디코더 추가
+
+                            //pipeline.addLast(new LineBasedFrameDecoder());
+                            pipeline.addLast(new MessageDecoder());
                             //핸들러 추가
                             pipeline.addLast(serviceHandler);
                         }
