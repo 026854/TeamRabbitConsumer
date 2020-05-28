@@ -8,6 +8,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
@@ -26,6 +27,7 @@ public class NettyServer {
     private int bossCount;
     @Value("${worker.thread.count}")
     private int workerCount;
+    private final int MAX_FRAME_SIZE =1024;
 
     /**
      * The constant SERVICE_HANDLER.
@@ -57,11 +59,13 @@ public class NettyServer {
                             ChannelPipeline pipeline = ch.pipeline();
                             pipeline.addLast(new LoggingHandler(LogLevel.INFO));
                             //디코더 추가
-
+                            pipeline.addLast(new LengthFieldBasedFrameDecoder(MAX_FRAME_SIZE,2,4));
                             //pipeline.addLast(new LineBasedFrameDecoder());
                             pipeline.addLast(new MessageDecoder());
                             //핸들러 추가
-                            pipeline.addLast(serviceHandler);
+                            //pipeline.addLast(serviceHandler);
+                            pipeline.addLast(new RequestHandler());
+                            pipeline.addLast(new MessageEncoder());
                         }
                     });
             //ChannelFuture : 비동기 방식의 작업 처리 후 결과를 제어
