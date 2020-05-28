@@ -1,4 +1,4 @@
-package com.rabbitmq.manager;
+package com.rabbitmq.manager.netty;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
@@ -23,7 +23,6 @@ public class ServiceHandler  extends ChannelInboundHandlerAdapter {
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //private final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-    final AttributeKey<Integer> id = AttributeKey.newInstance("id");
     final AttributeKey<Integer> status = AttributeKey.newInstance("status");
     final AttributeKey<String> clinetID = AttributeKey.newInstance("clientID");
     private static final AtomicInteger count = new AtomicInteger(0);
@@ -51,8 +50,7 @@ public class ServiceHandler  extends ChannelInboundHandlerAdapter {
         // 변환기 처리 결과.. 받아야 하는 부분?
         ByteBuf byteBuf = (ByteBuf) msg;
         logger.debug("message : {} ",byteBuf.toString(Charset.defaultCharset()));
-        //channels.write(msg);
-        ctx.writeAndFlush(msg);
+        ctx.channel().attr(status).set(0);
 
         //채널 파이프라인에 대한 이벤트 처리 writeAndFlush 데이터를 쓰고 버퍼를 전송
         //channels.writeAndFlush(msg);

@@ -1,4 +1,4 @@
-package com.rabbitmq.manager;
+package com.rabbitmq.manager.vo;
 
 
 import lombok.Getter;
