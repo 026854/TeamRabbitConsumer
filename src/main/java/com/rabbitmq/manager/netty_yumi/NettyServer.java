@@ -9,7 +9,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +63,7 @@ public class NettyServer {
                             pipeline.addLast(new MessageDecoder());
                             //핸들러 추가
                             //pipeline.addLast(serviceHandler);
-                            pipeline.addLast(new RequestHandler());
+                            pipeline.addLast(new MessageHandler());
                             pipeline.addLast(new MessageEncoder());
                         }
                     });

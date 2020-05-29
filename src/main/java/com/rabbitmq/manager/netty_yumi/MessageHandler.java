@@ -1,48 +1,23 @@
 package com.rabbitmq.manager.netty_yumi;
 
-import com.rabbitmq.manager.vo.Message;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import java.util.Map;
+public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
 
-@Component
-public class MessageHandler {
+    Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    ServiceHandler serviceHandler;
-    @Autowired
-    ChannelGroup channelList;
-    Logger logger =  LoggerFactory.getLogger(this.getClass());
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+    }
 
-    @Autowired
-    Map<String, Channel> channelMap;
-
-    public void request(Message msg){
-        logger.info("msg : "+msg);
-        ByteBuf messageBuffer = Unpooled.buffer();
-        String m = msg.getId()+ " : " +msg.getPath();
-        messageBuffer.writeBytes(m.getBytes());
-
-        for( Channel channel : channelList){ //근데 다 1이면?
-            if(channel.attr(serviceHandler.status).get() ==1) continue;
-            else{
-
-                channel.attr(serviceHandler.clinetID).set(msg.getId());
-                channel.writeAndFlush(messageBuffer);
-                break;
-            }
-        }
-
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, NettyMessage msg) throws Exception {
+        logger.info("netty Message : "+ msg.toString());
     }
 
 
 }
-
-

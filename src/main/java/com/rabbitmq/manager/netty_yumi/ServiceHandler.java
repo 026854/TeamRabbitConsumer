@@ -39,6 +39,7 @@ public class ServiceHandler  extends ChannelInboundHandlerAdapter {
         logger.info("cxt.channel.id ="+ctx.channel().id().asShortText());
         //channels.add(ctx.channel());
         ctx.channel().attr(status).set(0);
+
         channelList.add(ctx.channel());
     }
 
@@ -62,5 +63,10 @@ public class ServiceHandler  extends ChannelInboundHandlerAdapter {
                 channel.writeAndFlush(msg);
             }
         }*/
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        super.userEventTriggered(ctx, evt);
     }
 }

@@ -5,6 +5,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import io.netty.handler.codec.ReplayingDecoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -16,6 +18,8 @@ public class MessageDecoder extends ByteToMessageDecoder {
      *  + length 4byte  = body 길이 정보
      *  + body (?) byte
      */
+    Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         byte messageType = in.readByte();
@@ -27,9 +31,9 @@ public class MessageDecoder extends ByteToMessageDecoder {
             byte[] req = new byte[buf.readableBytes()];
             buf.readBytes(req);
             body = new String(req, "UTF-8");
-
         }
         NettyMessage nettyMessage = new NettyMessage(messageType,taskType,length,body);
+        logger.info(nettyMessage.toString());
         out.add(nettyMessage);
     }
 }

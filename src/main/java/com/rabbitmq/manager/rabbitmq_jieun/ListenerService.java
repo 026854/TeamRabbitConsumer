@@ -3,7 +3,7 @@ package com.rabbitmq.manager.rabbitmq_jieun;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rabbitmq.manager.netty_yumi.MessageHandler;
+import com.rabbitmq.manager.netty_yumi.RequestHandler;
 import com.rabbitmq.manager.vo.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import org.springframework.util.StopWatch;
 public class ListenerService {
 
     @Autowired
-    private MessageHandler messageHandler;
+    private RequestHandler requestHandler;
 
 
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -30,7 +30,8 @@ public class ListenerService {
         watch.stop();
         //System.out.println("instance " + receiver + " [x] Done in "
         //        + watch.getTotalTimeSeconds() + "s");
-        messageHandler.request(message);
+       //여기서 콜백?
+        requestHandler.request(message);
     }
     private void doWork(String in) throws InterruptedException {
         for (char ch : in.toCharArray()) {

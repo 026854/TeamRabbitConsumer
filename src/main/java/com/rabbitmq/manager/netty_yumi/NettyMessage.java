@@ -1,9 +1,6 @@
 package com.rabbitmq.manager.netty_yumi;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Map;
 
