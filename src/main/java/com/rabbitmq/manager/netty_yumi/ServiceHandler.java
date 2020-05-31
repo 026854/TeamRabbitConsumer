@@ -39,6 +39,7 @@ public class ServiceHandler  extends ChannelInboundHandlerAdapter {
         logger.info("cxt.channel.id ="+ctx.channel().id().asShortText());
         //channels.add(ctx.channel());
         ctx.channel().attr(status).set(0);
+
         channelList.add(ctx.channel());
     }
 
@@ -46,9 +47,11 @@ public class ServiceHandler  extends ChannelInboundHandlerAdapter {
     //데이터 수신 이벤트 처리 메서드. 클라이언트로부터 데이터 수신이 이뤄졌을 때 실행
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         // 변환기 처리 결과.. 받아야 하는 부분?
+
         ByteBuf byteBuf = (ByteBuf) msg;
         logger.debug("message : {} ",byteBuf.toString(Charset.defaultCharset()));
-        ctx.channel().attr(status).set(0);
+
+        //ctx.channel().attr(status).set(0);
 
         //채널 파이프라인에 대한 이벤트 처리 writeAndFlush 데이터를 쓰고 버퍼를 전송
         //channels.writeAndFlush(msg);
@@ -60,5 +63,10 @@ public class ServiceHandler  extends ChannelInboundHandlerAdapter {
                 channel.writeAndFlush(msg);
             }
         }*/
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        super.userEventTriggered(ctx, evt);
     }
 }
