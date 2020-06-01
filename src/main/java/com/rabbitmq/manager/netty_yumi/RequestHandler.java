@@ -27,7 +27,7 @@ public class RequestHandler {
     public void request(Message msg){
         logger.info("msg : "+msg);
         ByteBuf messageBuffer = Unpooled.buffer();
-        String m = msg.getId()+ " : " +msg.getPath();
+        String m = msg.getId()+ " : " +msg.getBeverageType().toString();
         messageBuffer.writeBytes(m.getBytes());
 
         for( Channel channel : channelList){ //근데 다 1이면?
