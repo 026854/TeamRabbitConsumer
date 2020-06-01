@@ -77,15 +77,6 @@ public class RabbitConfiguration {
 		return new Jackson2JsonMessageConverter();
 	}
 
-	@Bean
-	public Map<String, Channel> channelMap(){
-		return new HashMap<>();
-	}
-
-	@Bean
-	public ChannelGroup ChannelList(){
-		return new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-	}
 
 	@Bean
 	public RabbitAdmin rabbitAdmin(RabbitTemplate template){
