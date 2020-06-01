@@ -28,26 +28,12 @@ public class NettyServer {
     private int workerCount;
     private final int MAX_FRAME_SIZE =1024;
 
-    /**
-     * The constant SERVICE_HANDLER.
-     */
-    @Autowired private ServiceHandler serviceHandler;
-    /**
-     * Start.
-     */
+    @Autowired private MessageHandler messageHandler;
+
     public void start() {
-        /**
-         * 클라이언트 연결을 수락하는 부모 스레드 그룹
-         */
         EventLoopGroup bossGroup = new NioEventLoopGroup(bossCount); //스레드 갯수
-
-        /**
-         * 연결된 클라이언트의 소켓으로 부터 데이터 입출력 및 이벤트를 담당하는 자식 스레드
-         */
         EventLoopGroup workerGroup = new NioEventLoopGroup(); //스레드 갯수 ;내부 설정에 의해 cpu 코어 수에 따라 설정
-
         try {
-
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)//서버 소켓 입출력 모드를 NIO로 설정
@@ -60,11 +46,10 @@ public class NettyServer {
                             //디코더 추가
                             pipeline.addLast(new LengthFieldBasedFrameDecoder(MAX_FRAME_SIZE,2,4));
                             //pipeline.addLast(new LineBasedFrameDecoder());
-                            pipeline.addLast(new MessageDecoder());
-                            //핸들러 추가
-                            //pipeline.addLast(serviceHandler);
-                            pipeline.addLast(new MessageHandler());
+                            pipeline.addLast(new MessageDecoder());;
                             pipeline.addLast(new MessageEncoder());
+                            //핸들러 추가
+                            pipeline.addLast(messageHandler);
                         }
                     });
             //ChannelFuture : 비동기 방식의 작업 처리 후 결과를 제어
