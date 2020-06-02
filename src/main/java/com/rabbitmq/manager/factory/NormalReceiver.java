@@ -1,5 +1,6 @@
 package com.rabbitmq.manager.factory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rabbitmq.manager.send.MessageSend;
 import com.rabbitmq.manager.vo.Message;
 import org.springframework.amqp.core.Exchange;
@@ -17,7 +18,7 @@ public class NormalReceiver implements CafeReceiver{
     @Autowired
     private Exchange exchange;
     @Override
-    public void make(Message message) {
+    public void make(Message message) throws JsonProcessingException {
         messageSend.sendMessage(exchange,"result",message);
 
     }

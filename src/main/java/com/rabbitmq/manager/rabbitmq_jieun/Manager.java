@@ -64,7 +64,7 @@ public class Manager {
         //Thread.sleep(5000);
     }
 
-    @RabbitListener(queues =NORMAL_QUEUE_NAME)
+    @RabbitListener(queues=NORMAL_QUEUE_NAME,concurrency = "3")
     public void normalReceiver(String message) throws InterruptedException, JsonMappingException, JsonProcessingException {
         listenerService.receive(message, "normal");
     }
