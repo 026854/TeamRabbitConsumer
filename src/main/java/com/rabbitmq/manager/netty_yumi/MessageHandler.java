@@ -1,5 +1,8 @@
 package com.rabbitmq.manager.netty_yumi;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.manager.send.MessageSend;
+import com.rabbitmq.manager.vo.Message;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -21,6 +24,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
 
     private final ChannelGroup channelList;
     private final ResponseHandler responseHandler;
+
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
