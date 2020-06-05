@@ -53,6 +53,7 @@ public class Manager {
 
 
 
+        //ch.write()
 
        // System.out.println("message: "+amqpAdmin.getQueueInfo("high-queue").getMessageCount());
         //System.out.println("message: "+channel.queueDeclarePassive("high-queue").getMessageCount());

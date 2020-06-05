@@ -7,6 +7,8 @@ import com.rabbitmq.manager.factory.CafeReceiver;
 import com.rabbitmq.manager.factory.CafeReceiverFactory;
 import com.rabbitmq.manager.netty_yumi.RequestHandler;
 import com.rabbitmq.manager.vo.Message;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelFuture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
@@ -22,6 +24,9 @@ public class ListenerService {
     private CafeReceiver cafeReceiver;
 
     private ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    RequestHandler requestHandler;
+
 
     public void receive(String in, String receiver) throws
             InterruptedException, JsonMappingException, JsonProcessingException {
@@ -39,8 +44,8 @@ public class ListenerService {
         watch.stop();
         //System.out.println("instance " + receiver + " [x] Done in "
         //        + watch.getTotalTimeSeconds() + "s");
-       //여기서 콜백?
 
+        //requestHandler.request(message);
     }
     private void doWork(String in) throws InterruptedException {
         for (char ch : in.toCharArray()) {
