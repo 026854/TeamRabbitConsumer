@@ -23,12 +23,11 @@ public class ListenerService {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public void receive(String in, String receiver) throws
+    public void receive(Message message, String receiver) throws
             InterruptedException, JsonMappingException, JsonProcessingException {
         StopWatch watch = new StopWatch();
         watch.start();
-        System.out.println(in.getClass());
-        Message message = objectMapper.readValue(in, Message.class);
+        //Message message = objectMapper.readValue(in, Message.class);
         System.out.println("instance " + receiver + " [x] Received '"
                 + message.getId() + "'");
         //doWork(message.getMenu());

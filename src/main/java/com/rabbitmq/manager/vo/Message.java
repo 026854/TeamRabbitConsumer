@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Date;
+
+
 @Getter
 @Setter
 @ToString
@@ -12,6 +15,7 @@ public class Message {
 	private String id;
 	private String menu, base, core;
 	private BeverageType beverageType;
+	private Date date;
 
 
 	public Message() {
@@ -27,13 +31,14 @@ public class Message {
 		super();
 		this.id = id;
 	}
-	public Message(String id,String menu,String base,String core,BeverageType beverageType) {
+	public Message(String id,String menu,String base,String core,BeverageType beverageType,Date date) {
 		super();
 		this.id = id;
 		this.menu = menu;
 		this.base = base;
 		this.core = core;
 		this.beverageType = beverageType;
+		this.date = date;
 
 	}
 

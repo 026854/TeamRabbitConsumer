@@ -13,11 +13,9 @@ public class MessageSend {
 
     @Autowired
     private RabbitTemplate template;
-    private ObjectMapper objectMapper = new ObjectMapper();
+   // private ObjectMapper objectMapper = new ObjectMapper();
 
     public void sendMessage(Exchange exchange, String key, Message message) throws JsonProcessingException {
-
-
-        template.convertAndSend(exchange.getName(),key,objectMapper.writeValueAsString(message));
+        template.convertAndSend(exchange.getName(),key,message);
     }
 }

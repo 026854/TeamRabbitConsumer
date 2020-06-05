@@ -22,6 +22,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
     Logger logger = LoggerFactory.getLogger(this.getClass());
     final AttributeKey<Byte> taskType = AttributeKey.newInstance("taskType");
 
+
     private final ChannelGroup channelList;
     private final ResponseHandler responseHandler;
 
