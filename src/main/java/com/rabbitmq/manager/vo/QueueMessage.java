@@ -1,37 +1,34 @@
 package com.rabbitmq.manager.vo;
 
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 
 import java.util.Date;
 
 
-@Getter
-@Setter
-@ToString
-public class Message {
+@Data
+public class QueueMessage {
 	private String id;
 	private String menu, base, core;
 	private BeverageType beverageType;
 	private Date date;
 
 
-	public Message() {
+	public QueueMessage() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Message(String id,String menu) {
+	public QueueMessage(String id, String menu) {
 		super();
 		this.id = id;
 		this.menu = menu;
 	}
-	public Message(String id){
+	public QueueMessage(String id){
 		super();
 		this.id = id;
 	}
-	public Message(String id,String menu,String base,String core,BeverageType beverageType,Date date) {
+	public QueueMessage(String id, String menu, String base, String core, BeverageType beverageType, Date date) {
 		super();
 		this.id = id;
 		this.menu = menu;

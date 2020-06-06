@@ -1,8 +1,5 @@
 package com.rabbitmq.manager.netty_yumi;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rabbitmq.manager.send.MessageSend;
-import com.rabbitmq.manager.vo.Message;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -11,7 +8,6 @@ import io.netty.util.AttributeKey;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,15 +1,17 @@
 package com.rabbitmq.manager.rabbitmq_jieun;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.manager.exception.HandleException;
 import com.rabbitmq.manager.factory.CafeReceiver;
 import com.rabbitmq.manager.factory.CafeReceiverFactory;
-import com.rabbitmq.manager.netty_yumi.RequestHandler;
-import com.rabbitmq.manager.vo.Message;
+//import com.rabbitmq.manager.vo.Message;
+import com.rabbitmq.manager.vo.QueueMessage;
+import org.springframework.amqp.core.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
+
+import java.io.IOException;
 
 @Service
 public class ListenerService {
@@ -23,16 +25,18 @@ public class ListenerService {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
+
+    @HandleException
     public void receive(Message message, String receiver) throws
-            InterruptedException, JsonMappingException, JsonProcessingException {
+            Exception {
         StopWatch watch = new StopWatch();
         watch.start();
-        //Message message = objectMapper.readValue(in, Message.class);
+       QueueMessage queueMessage = objectMapper.readValue(new String(message.getBody()),  QueueMessage.class);
         System.out.println("instance " + receiver + " [x] Received '"
-                + message.getId() + "'");
+                + queueMessage.getId() + "'");
         //doWork(message.getMenu());
 
-        cafeReceiver = factory.getCafeReceiver(message.getBeverageType());
+        cafeReceiver = factory.getCafeReceiver(queueMessage.getBeverageType());
         cafeReceiver.make(message);
 
         watch.stop();
