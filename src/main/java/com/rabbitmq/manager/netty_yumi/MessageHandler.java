@@ -3,9 +3,7 @@ package com.rabbitmq.manager.netty_yumi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.manager.send.MessageSend;
 import com.rabbitmq.manager.vo.Message;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.util.AttributeKey;
 import lombok.RequiredArgsConstructor;
@@ -30,19 +28,28 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         //super.channelActive(ctx);
         channelList.add(ctx.channel());
+        //던져줘
+        String str ="hihi";
+        NettyMessage nettyMessage = new NettyMessage((byte)1, (byte)1,str.getBytes().length,str );
+        ChannelFuture channelFuture = ctx.channel().writeAndFlush(nettyMessage);
+
+        channelFuture.addListener(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture future) throws Exception {
+                if(future.isSuccess()){
+
+                    String str1 ="byebye";
+                    NettyMessage nettyMessage1 = new NettyMessage((byte)1, (byte)1,str1.getBytes().length,str1 );
+                    ctx.channel().writeAndFlush(nettyMessage1);
+                }
+            }
+        });
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, NettyMessage msg) throws Exception {
+        logger.info("chennel Read :"+msg.getBody());
 
-        // 요청이면 요청 핸들러,, 응답이면 응답 핸들러를 fire 하는 식으로??
-        if(msg.getMessageType() == 1){ //요청 메세지 처리
-            logger.info("MessageHandler: channelRead0() : request : "+msg.getTaskType());
-            ctx.channel().attr(taskType).set(msg.getTaskType());
-        }else{ //응답 메세지 처리
-            logger.info("MessageHandler: channelRead0() : response : "+msg.getBody());
-            responseHandler.response(msg.getBody());
-        }
     }
 
     @Override

@@ -19,7 +19,8 @@ import java.util.Random;
 public class RequestHandler {
 
     private final MessageHandler messageHandler;
-    private final ChannelGroup channelList;
+    @Autowired
+    ChannelGroup ChannelList;
     Logger logger =  LoggerFactory.getLogger(this.getClass());
 
     public void request(Message msg){
@@ -29,11 +30,8 @@ public class RequestHandler {
         logger.info("msg (random task:"+(byte)randomTask+") : "+msg);
         NettyMessage nettyMessage = new NettyMessage((byte)1,(byte)randomTask,testMsg.getBytes().length,testMsg);
 
-        for(Channel channel : channelList){
-           if( channel.attr(messageHandler.taskType).get() == (byte)randomTask){
-               channel.writeAndFlush(nettyMessage);
-           }
-        }
+        ChannelList.writeAndFlush(nettyMessage);
+
     }
 
 
