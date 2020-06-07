@@ -19,7 +19,7 @@ public class NormalReceiver extends CafeReceiver{
     private Exchange exchange;
     @Override
     public void make(Message message) throws IOException {
-        messageSend.sendMessage(exchange,"result", getQueueMessage(message));
+        //messageSend.sendMessage(exchange,"result", getQueueMessage(message));
 
     }
 }

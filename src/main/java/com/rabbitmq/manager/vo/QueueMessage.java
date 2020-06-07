@@ -2,7 +2,10 @@ package com.rabbitmq.manager.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import org.springframework.amqp.core.Message;
 
 import java.util.Date;
 
@@ -38,6 +41,7 @@ public class QueueMessage {
 		this.date = date;
 
 	}
+
 
 
 

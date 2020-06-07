@@ -10,10 +10,7 @@ import java.io.IOException;
 
 @Component
 public abstract class CafeReceiver {
-    public abstract void make(Message message) throws IOException;
+    public abstract void make(Message message) throws Exception;
 
-    public QueueMessage getQueueMessage(Message message) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(new String(message.getBody()), QueueMessage.class);
-    }
+
 }

@@ -1,24 +1,10 @@
 package com.rabbitmq.manager.rabbitmq_jieun;
 
-
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Channel;
-
-//import com.rabbitmq.manager.vo.Message;
-import com.rabbitmq.manager.vo.QueueMessage;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import org.springframework.messaging.handler.annotation.Header;
 
-import java.io.IOException;
-import java.util.List;
 
 
 public class Manager {
@@ -28,52 +14,30 @@ public class Manager {
 
 
     @Autowired
-    private RabbitTemplate template;
-
-    @Autowired
     private AmqpAdmin amqpAdmin;
 
     @Autowired
     private ListenerService listenerService;
 
 
-    @Autowired
-    private RabbitAdmin rabbitAdmin;
-    Channel channel;
-
-
-//    //@RabbitHandler // 메세지 타입에 따라 메서드 매핑
-//    , containerFactory = "prefetchTenRabbitListenerContainerFactory"
-
     @RabbitListener(queues = COFFEE_QUEUE_NAME)
     public void coffeeReceiver(Message message) throws Exception {
 
-
-        //enqueued message count
-
-        //System.out.println(message.getMessageProperties().getTimestamp());
-        //AMQP.BasicProperties pro = new AMQP.BasicProperties();
-        //pro.getTimestamp();
-        //System.out.println("time" + pro.getTimestamp().toString());
-
-        //System.out.println(message.getDate());
+        System.out.println(" coffee-message:" + amqpAdmin.getQueueProperties(COFFEE_QUEUE_NAME).get("QUEUE_MESSAGE_COUNT"));
         listenerService.receive(message, "coffee");
-        //Thread.sleep(5000);
-
-
 
     }
 
-//    @RabbitListener(queues = NORMAL_QUEUE_NAME, concurrency = "3")
-//    public void normalReceiver(Message message) throws InterruptedException, JsonMappingException, JsonProcessingException {
-//
-//        listenerService.receive(message, "normal");
-//    }
-//
-//    @RabbitListener(queues = BLENDER_QUEUE_NAME)
-//    public void blenderReceiver(Message message) throws InterruptedException, JsonMappingException, JsonProcessingException {
-//        listenerService.receive(message, "blender");
-//    }
+    @RabbitListener(queues = NORMAL_QUEUE_NAME, concurrency = "3")
+    public void normalReceiver(Message message) throws Exception{
+
+        listenerService.receive(message, "normal");
+    }
+
+    @RabbitListener(queues = BLENDER_QUEUE_NAME)
+    public void blenderReceiver(Message message) throws Exception {
+        listenerService.receive(message, "blender");
+    }
 
 
 }

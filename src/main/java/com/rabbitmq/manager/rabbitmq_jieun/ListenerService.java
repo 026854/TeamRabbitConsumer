@@ -1,17 +1,14 @@
 package com.rabbitmq.manager.rabbitmq_jieun;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.manager.exception.HandleException;
+import com.rabbitmq.manager.exception.InvalidMessageException;
 import com.rabbitmq.manager.factory.CafeReceiver;
 import com.rabbitmq.manager.factory.CafeReceiverFactory;
-//import com.rabbitmq.manager.vo.Message;
 import com.rabbitmq.manager.vo.QueueMessage;
 import org.springframework.amqp.core.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
-
-import java.io.IOException;
 
 @Service
 public class ListenerService {
@@ -23,7 +20,7 @@ public class ListenerService {
 
     private CafeReceiver cafeReceiver;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private MessageConvert messageConvert = new MessageConvert();
 
 
     @HandleException
@@ -31,17 +28,18 @@ public class ListenerService {
             Exception {
         StopWatch watch = new StopWatch();
         watch.start();
-       QueueMessage queueMessage = objectMapper.readValue(new String(message.getBody()),  QueueMessage.class);
-        System.out.println("instance " + receiver + " [x] Received '"
-                + queueMessage.getId() + "'");
-        //doWork(message.getMenu());
 
+       QueueMessage queueMessage = messageConvert.getQueueMessage(message);
+
+        if (queueMessage.getBeverageType() == null ||
+        queueMessage.getId() ==null || queueMessage.getMenu() == null || queueMessage.getBase()==null ||queueMessage.getCore()==null||queueMessage.getDate()==null ) {
+            throw new InvalidMessageException("value has null");
+        }
         cafeReceiver = factory.getCafeReceiver(queueMessage.getBeverageType());
         cafeReceiver.make(message);
 
         watch.stop();
-        //System.out.println("instance " + receiver + " [x] Done in "
-        //        + watch.getTotalTimeSeconds() + "s");
+
        //여기서 콜백?
 
     }

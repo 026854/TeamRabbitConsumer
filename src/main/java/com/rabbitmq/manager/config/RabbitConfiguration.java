@@ -56,10 +56,6 @@ public class RabbitConfiguration {
 ///////////////////////////////
 	@Bean
 	public Queue coffeeQueue() {
-//		Map<String, Object> args = new HashMap<>();
-//		args.put("x-dead-letter-exchange", DIRECT_DLQEXCHANGE_NAME);
-//		args.put("x-dead-letter-routing-key", "dlq");
-
 		return new Queue(COFFEE_QUEUE_NAME);
 		// durable 브로커가 재시작 할 때 남아있는지 여부
 	}
