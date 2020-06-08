@@ -29,8 +29,8 @@ public class NettyClient {
 
     public void start(){
         clientBootstrap = new Bootstrap();
-        clientBootstrap.group(new OioEventLoopGroup())
-                .channel(OioSocketChannel.class)//서버 소켓 입출력 모드를 NIO로 설정
+        clientBootstrap.group(new NioEventLoopGroup(3))
+                .channel(NioSocketChannel.class)//서버 소켓 입출력 모드를 NIO로 설정
                 .handler(new ChannelInitializer<SocketChannel>() { //클라이언트 소켓 채널로 송수신 되는 데이터 가공 핸들러
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
@@ -44,6 +44,7 @@ public class NettyClient {
                         pipeline.addLast(new MessageHandler());
                     }
                 });
+        connect();
         connect();
     }
 

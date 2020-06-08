@@ -15,8 +15,10 @@ public class CoffeeReceiver extends CafeReceiver {
 
     @Override
     public void make(Message message) throws Exception {
+        System.out.println("동시에 되나..?");
+        //System.out.println(message);
         String value =null;
         value = requestHandler.request(message);
-
+        //Thread.sleep(5000);
     }
 }

@@ -9,10 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class MessageData {
 
-    private ConcurrentHashMap<String, Optional<String>> message =new ConcurrentHashMap<>();
-   // private BlockingConcurrentHash
-    public synchronized void getMessage(){
-
-    }
+    String id;
 
 }

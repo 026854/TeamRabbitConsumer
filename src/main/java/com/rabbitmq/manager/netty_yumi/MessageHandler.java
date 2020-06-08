@@ -33,7 +33,6 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         //super.channelActive(ctx);
-      if(ChannelList == null) logger.info("channel is null");
       ChannelList.add(ctx.channel());
     }
 
@@ -53,7 +52,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
 
        //ResponseMap.put(msg.getBody(), "내용물");
        responseSync.setResult(msg.getBody(),"water");
-       //logger.info("key 넣음"+ResponseMap.get(msg.getBody()));
+       logger.info("key 넣음"+ResponseMap.get(msg.getBody()));
     }
 
 
