@@ -30,6 +30,9 @@ public class RequestHandler {
     private MessageConvert messageConvert = new MessageConvert();
     Logger logger =  LoggerFactory.getLogger(this.getClass());
 
+
+
+
     public String request(Message message) throws Exception {
         QueueMessage msg = messageConvert.getQueueMessage(message);
         //초기화 될때까지 기다려야함.. 엠큐가 더 빨리 동작해 ㅠㅠ

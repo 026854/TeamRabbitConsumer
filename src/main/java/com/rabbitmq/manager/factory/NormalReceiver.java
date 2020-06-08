@@ -21,7 +21,7 @@ public class NormalReceiver extends CafeReceiver{
     @Autowired
     private Exchange exchange;
     @Override
-    public void make(Message message) throws Exception {
+    public void make(String cup, String straw,Message message) throws Exception {
         rabbitTemplate.convertAndSend(exchange.getName(),"result",message);
         //messageSend.sendMessage(exchange.getName(),"result", message);
 
