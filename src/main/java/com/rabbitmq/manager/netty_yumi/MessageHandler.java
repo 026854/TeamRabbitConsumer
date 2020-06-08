@@ -1,6 +1,7 @@
 package com.rabbitmq.manager.netty_yumi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.manager.config.BeanUtils;
 import com.rabbitmq.manager.send.MessageSend;
 import com.rabbitmq.manager.vo.Message;
 import io.netty.channel.ChannelHandler;
@@ -8,29 +9,41 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.util.AttributeKey;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+
 //@Component
-//@RequiredArgsConstructor
 //@ChannelHandler.Sharable
 public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
-    
+
+
+    HashMap<String, String> ResponseMap;
     Logger logger = LoggerFactory.getLogger(this.getClass());
     //final AttributeKey<Byte> taskType = AttributeKey.newInstance("taskType");
-
+    ChannelGroup ChannelList;
   //  private final ChannelGroup channelList;
-    @Autowired
-    private RequestHandler requestHandler;
+   RequestHandler requestHandler;
+  ResponseSync responseSync;
 
+  public MessageHandler() {
+    logger =  LoggerFactory.getLogger(this.getClass());
+    ResponseMap = (HashMap<String, String>) BeanUtils.getBean("ResponseMap");
+    ChannelList =(ChannelGroup) BeanUtils.getBean("ChannelList");
+    requestHandler =(RequestHandler) BeanUtils.getBean("requestHandler");
+    responseSync=(ResponseSync) BeanUtils.getBean("responseSync");
+  }
 
-    @Override
+  @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         //super.channelActive(ctx);
-       // channelList.add(ctx.channel());
+      if(ChannelList == null) logger.info("channel is null");
+      ChannelList.add(ctx.channel());
     }
 
     @Override
@@ -47,17 +60,22 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
         }
         */
 
-
+       //ResponseMap.put(msg.getBody(), "내용물");
+       responseSync.setResult(msg.getBody(),"내용물");
+      // ResponseMap.notifyAll();
+       logger.info("key 넣음"+ResponseMap.get("key"));
     }
 
-    @Override
-    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-        ctx.channel().close();
-        super.channelReadComplete(ctx);
-    }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         super.exceptionCaught(ctx, cause);
+    }
+
+
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        super.userEventTriggered(ctx, evt);
     }
 }

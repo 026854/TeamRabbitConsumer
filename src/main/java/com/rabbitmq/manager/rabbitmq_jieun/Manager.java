@@ -5,6 +5,7 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.manager.factory.CafeReceiver;
 import com.rabbitmq.manager.factory.CafeReceiverFactory;
+import com.rabbitmq.manager.netty_yumi.ResponseSync;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.connection.PublisherCallbackChannelImpl;
@@ -32,7 +33,6 @@ public class Manager {
 
     @Autowired
     private ListenerService listenerService;
-
 
 
     @Autowired

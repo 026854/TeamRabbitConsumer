@@ -21,6 +21,8 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+
 @Configuration
 public class NettyConfiguration {
 
@@ -30,23 +32,8 @@ public class NettyConfiguration {
     }
 
     @Bean
-    public Bootstrap bootstrap(){
-        Bootstrap b = new Bootstrap();
-        b.group(new OioEventLoopGroup())
-                .channel(OioSocketChannel.class)//서버 소켓 입출력 모드를 NIO로 설정
-                .handler(new ChannelInitializer<SocketChannel>() { //클라이언트 소켓 채널로 송수신 되는 데이터 가공 핸들러
-                    @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
-                        ChannelPipeline pipeline = ch.pipeline();
-                        pipeline.addLast(new LoggingHandler(LogLevel.INFO));
-                        //코덱
-                        pipeline.addLast(new LengthFieldBasedFrameDecoder(2024,2,4));
-                        pipeline.addLast(new MessageDecoder());;
-                        pipeline.addLast(new MessageEncoder());
-                        //핸들러 추가
-                        pipeline.addLast(new MessageHandler());
-                    }
-                });
-        return b;
+    public HashMap<String, String> ResponseMap(){
+        return new HashMap<>();
     }
+
 }
