@@ -38,7 +38,7 @@ public class ExceptionHandlerAspect {
                 return;
             }
             properties.getHeaders().put("x-death",deathCnt+1);
-           template.convertAndSend(properties.getReceivedExchange(),properties.getReceivedRoutingKey(),communicationFailException.getRabbitMqMessage());
+            template.convertAndSend(properties.getReceivedExchange(),properties.getReceivedRoutingKey(),communicationFailException.getRabbitMqMessage());
         } else if (ex instanceof InvalidMessageException) {
             // do nothing
             System.out.println(ex.getMessage());

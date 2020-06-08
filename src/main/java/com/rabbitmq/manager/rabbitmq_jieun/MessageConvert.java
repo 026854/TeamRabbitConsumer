@@ -10,19 +10,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessageConvert {
     QueueMessage queueMessage = new QueueMessage();
+    ObjectMapper objectMapper = new ObjectMapper();
     public MessageConvert() {
     }
 
     public QueueMessage getQueueMessage(Message message) throws Exception {
         try{
         byte[] b = message.getBody();
-        ObjectMapper objectMapper = new ObjectMapper();
+
         String qm = objectMapper.readValue(new String(b),String.class);
         queueMessage = objectMapper.readValue(qm,  QueueMessage.class);
        }
        catch (Exception e){
             throw  new JsonFailException();
      }
+        return queueMessage;
+    }
+    public QueueMessage stringToQueueMessage(String msg) throws Exception{
+        queueMessage = objectMapper.readValue(msg,QueueMessage.class);
         return queueMessage;
     }
 }

@@ -12,13 +12,21 @@ import org.springframework.stereotype.Service;
 public class MessageSend {
 
     @Autowired
-    private RabbitTemplate template;
-   // private ObjectMapper objectMapper = new ObjectMapper();
+    private RabbitTemplate rabbitTemplate;
 
-    public void sendMessage(Exchange exchange, String key, QueueMessage queueMessage) throws JsonProcessingException {
-        template.convertAndSend(exchange.getName(),key, queueMessage);
+    public void sendMessage(Exchange exchange, String key, QueueMessage queueMessage) throws Exception {
+        rabbitTemplate.convertAndSend(exchange.getName(),key, queueMessage);
     }
-    public void sendMessage(Message message) throws JsonProcessingException {
-        template.convertAndSend(message.getMessageProperties().getReceivedExchange(),message.getMessageProperties().getReceivedRoutingKey(), message);
+    public void sendMessage(Exchange exchange, String key, String queueMessage) throws Exception {
+        rabbitTemplate.convertAndSend(exchange.getName(),key, queueMessage);
+    }
+    public void sendMessage(Exchange exchange, String key, Message message) throws Exception {
+        rabbitTemplate.convertAndSend(exchange.getName(),key, "messagerkqslek");
+    }
+    public void sendMessage(String exchange, String key, Message message) throws Exception {
+        rabbitTemplate.convertAndSend(exchange,key, "messagerkqslek");
+    }
+    public void sendMessage(Message message) throws Exception {
+        rabbitTemplate.convertAndSend(message.getMessageProperties().getReceivedExchange(),message.getMessageProperties().getReceivedRoutingKey(), message);
     }
 }
