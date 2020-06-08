@@ -45,7 +45,7 @@ public class NettyClient {
                     }
                 });
         connect();
-        connect();
+        //connect();
     }
 
     public ChannelFuture connect(){

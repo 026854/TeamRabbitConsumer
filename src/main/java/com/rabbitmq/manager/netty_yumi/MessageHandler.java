@@ -8,13 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 //@Component
 //@ChannelHandler.Sharable
 public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
 
 
-    HashMap<String, String> ResponseMap;
+    ConcurrentHashMap<String, String> ResponseMap;
     Logger logger = LoggerFactory.getLogger(this.getClass());
     //final AttributeKey<Byte> taskType = AttributeKey.newInstance("taskType");
     ChannelGroup ChannelList;
@@ -23,11 +24,11 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
     ResponseSync responseSync;
 
     public MessageHandler() {
-    logger =  LoggerFactory.getLogger(this.getClass());
-    ResponseMap = (HashMap<String, String>) BeanUtils.getBean("ResponseMap");
-    ChannelList =(ChannelGroup) BeanUtils.getBean("ChannelList");
-    requestHandler =(RequestHandler) BeanUtils.getBean("requestHandler");
-    responseSync=(ResponseSync) BeanUtils.getBean("responseSync");
+        logger =  LoggerFactory.getLogger(this.getClass());
+        ResponseMap = (ConcurrentHashMap<String, String>) BeanUtils.getBean("ResponseMap");
+        ChannelList =(ChannelGroup) BeanUtils.getBean("ChannelList");
+        requestHandler =(RequestHandler) BeanUtils.getBean("requestHandler");
+        responseSync=(ResponseSync) BeanUtils.getBean("responseSync");
     }
 
     @Override

@@ -25,7 +25,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RequiredArgsConstructor
 public class RequestHandler {
 
-    //private final MessageHandler messageHandler;
     private final ChannelGroup ChannelList;
     private final ResponseSync responseSync;
     private MessageConvert messageConvert = new MessageConvert();
@@ -43,7 +42,6 @@ public class RequestHandler {
         String request = msg.getId();
         NettyMessage nettyMessage = new NettyMessage((byte)1,(byte)1,request.getBytes().length,request);
         int temp = index.incrementAndGet();
-        //ChannelList.
         ChannelList.writeAndFlush(nettyMessage);
         int i=0;
         for(Channel channel : ChannelList){

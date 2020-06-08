@@ -1,14 +1,8 @@
 package com.rabbitmq.manager.netty_yumi;
 
-import org.springframework.stereotype.Component;
+import lombok.Data;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-
-@Component
+@Data
 public class MessageData {
-
     String id;
-
 }

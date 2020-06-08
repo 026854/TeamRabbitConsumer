@@ -1,5 +1,6 @@
 package com.rabbitmq.manager.config;
 
+import com.rabbitmq.manager.netty_yumi.MessageData;
 import com.rabbitmq.manager.netty_yumi.MessageDecoder;
 import com.rabbitmq.manager.netty_yumi.MessageEncoder;
 import com.rabbitmq.manager.netty_yumi.MessageHandler;
@@ -22,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 public class NettyConfiguration {
@@ -32,8 +34,8 @@ public class NettyConfiguration {
     }
 
     @Bean
-    public HashMap<String, String> ResponseMap(){
-        return new HashMap<>();
+    public ConcurrentHashMap<String, String> ResponseMap(){
+        return new ConcurrentHashMap<>();
     }
 
 }
