@@ -20,7 +20,6 @@ public class ListenerService {
 
     private CafeReceiver cafeReceiver;
 
-    private MessageConvert messageConvert = new MessageConvert();
     private String cup,straw;
 
     @HandleException
@@ -28,8 +27,8 @@ public class ListenerService {
         StopWatch watch = new StopWatch();
         watch.start();
 
-        //메세지를 voa로
-        QueueMessage queueMessage = messageConvert.getQueueMessage(message);
+        //메세지를 vo로
+        QueueMessage queueMessage = MessageConvert.getQueueMessage(message);
 
         //invaild check
         if (queueMessage.getBeverageType() == null ||

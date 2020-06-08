@@ -12,7 +12,8 @@ public class BlenderReceiver extends CafeReceiver{
 
     @Override
     public void make(String cup, String straw,Message message) throws Exception {
+        String value =null;
+        value = requestHandler.request(message);
 
-        requestHandler.request(message);
     }
 }
