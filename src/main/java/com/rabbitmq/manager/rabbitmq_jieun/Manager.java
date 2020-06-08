@@ -22,7 +22,6 @@ public class Manager {
 
     @RabbitListener(queues = COFFEE_QUEUE_NAME)
     public void coffeeReceiver(Message message) throws Exception {
-        System.out.println(message);
         System.out.println(" coffee-message:" + amqpAdmin.getQueueProperties(COFFEE_QUEUE_NAME).get("QUEUE_MESSAGE_COUNT"));
         listenerService.receive(message, "coffee");
 
