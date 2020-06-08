@@ -10,23 +10,22 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ResponseSync {
 
     @Autowired
-    ConcurrentHashMap<String, String> ResponseMap;
+    ConcurrentHashMap<String, String> channelResponse;
 
     public String getResult(String key) throws InterruptedException {
         String res = null;
-        ResponseMap.put(key,"null");
-        System.out.println(key+" - 대기");
-        synchronized (ResponseMap.get(key)) {
-            ResponseMap.get(key).wait();
-            res = ResponseMap.get(key);
+        channelResponse.put(key,"null");
+        synchronized (channelResponse.get(key)) {
+            channelResponse.get(key).wait();
+            res = channelResponse.get(key);
             return res;
         }
     }
 
     public void setResult(String key, String value) throws InterruptedException {
-        synchronized(ResponseMap.get(key)) {
-            ResponseMap.get(key).notify();
-            ResponseMap.put(key, value);
+        synchronized(channelResponse.get(key)) {
+            channelResponse.get(key).notify();
+            channelResponse.put(key, value);
         }
     }
 }

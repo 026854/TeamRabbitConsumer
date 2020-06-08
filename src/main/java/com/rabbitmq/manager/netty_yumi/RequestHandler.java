@@ -30,23 +30,19 @@ public class RequestHandler {
     private MessageConvert messageConvert = new MessageConvert();
     Logger logger =  LoggerFactory.getLogger(this.getClass());
     AtomicInteger index = new AtomicInteger(0);
+
     public String request(Message message) throws Exception {
         QueueMessage msg = messageConvert.getQueueMessage(message);
-        //초기화 될때까지 기다려야함.. 엠큐가 더 빨리 동작해 ㅠㅠ
-        while(ChannelList.isEmpty()){
-
-        }
+        //netty client 부터 먼저 초기화 해야함
+        while(ChannelList.isEmpty()){ }
         logger.info("request to channel: "+msg.toString());
-        logger.info("block id :"+msg.getId());
         //String request =msg.toString();
         String request = msg.getId();
         NettyMessage nettyMessage = new NettyMessage((byte)1,(byte)1,request.getBytes().length,request);
-        int temp = index.incrementAndGet();
-        ChannelList.writeAndFlush(nettyMessage);
-        int i=0;
-        for(Channel channel : ChannelList){
+        //int temp = index.incrementAndGet();
 
-        }
+        ChannelList.writeAndFlush(nettyMessage);
+
         String key = msg.getId();
         String value = null;
         try {
@@ -55,7 +51,7 @@ public class RequestHandler {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        logger.info("자원 사용 완료 추출물 : "+value);
+        logger.info("response from channel:"+value);
         return value;
     }
 

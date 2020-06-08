@@ -1,6 +1,9 @@
-package com.rabbitmq.manager.netty_yumi;
+package com.rabbitmq.manager.netty_yumi.channel.handler;
 
 import com.rabbitmq.manager.config.BeanUtils;
+import com.rabbitmq.manager.netty_yumi.NettyMessage;
+import com.rabbitmq.manager.netty_yumi.RequestHandler;
+import com.rabbitmq.manager.netty_yumi.ResponseSync;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -19,7 +22,6 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
     Logger logger = LoggerFactory.getLogger(this.getClass());
     //final AttributeKey<Byte> taskType = AttributeKey.newInstance("taskType");
     ChannelGroup ChannelList;
-    //  private final ChannelGroup channelList;
     RequestHandler requestHandler;
     ResponseSync responseSync;
 
@@ -33,8 +35,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        //super.channelActive(ctx);
-      ChannelList.add(ctx.channel());
+        ChannelList.add(ctx.channel());
     }
 
     @Override
@@ -51,21 +52,8 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
         }
         */
 
-       //ResponseMap.put(msg.getBody(), "내용물");
        responseSync.setResult(msg.getBody(),"water");
        logger.info("key 넣음"+ResponseMap.get(msg.getBody()));
     }
 
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        super.exceptionCaught(ctx, cause);
-    }
-
-
-
-    @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        super.userEventTriggered(ctx, evt);
-    }
 }

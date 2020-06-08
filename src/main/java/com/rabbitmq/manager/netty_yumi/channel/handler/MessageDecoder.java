@@ -1,5 +1,6 @@
-package com.rabbitmq.manager.netty_yumi;
+package com.rabbitmq.manager.netty_yumi.channel.handler;
 
+import com.rabbitmq.manager.netty_yumi.NettyMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -33,7 +34,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
             body = new String(req, "UTF-8");
         }
         NettyMessage nettyMessage = new NettyMessage(messageType,taskType,length,body);
-        logger.info(nettyMessage.toString());
+        //logger.info(nettyMessage.toString());
         out.add(nettyMessage);
     }
 }
