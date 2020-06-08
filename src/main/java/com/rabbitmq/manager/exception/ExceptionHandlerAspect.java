@@ -1,10 +1,13 @@
 package com.rabbitmq.manager.exception;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rabbitmq.manager.send.MessageSend;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,34 +21,39 @@ public class ExceptionHandlerAspect {
 
     @Autowired
     private RabbitTemplate template;
+    @Autowired
     private MessageSend messageSend;
 
     @AfterThrowing(pointcut = "handledMethods()", throwing = "ex")
     public void handleTheException(Exception ex){
+        Logger logger =  LoggerFactory.getLogger(this.getClass());
         if (ex instanceof CommunicationFailException) {
             CommunicationFailException communicationFailException = (CommunicationFailException) ex;
 
             if (communicationFailException.getRabbitMqMessage() == null) {
+
+                logger.info("communucationFailException  === > RabbitMQ is null");
                 return;
             }
 
             MessageProperties properties = communicationFailException.getRabbitMqMessage().getMessageProperties();
             Integer deathCnt = (Integer) properties.getHeaders().get("x-death");
 
-            properties.getHeaders().put("x-delay",5000);
+
             if(deathCnt>3){
-                System.out.println("deathCnt is full ----> dead :(");
+               logger.info("deathCnt is full ----> dead :(");
                 return;
             }
             properties.getHeaders().put("x-death",deathCnt+1);
-            template.convertAndSend(properties.getReceivedExchange(),properties.getReceivedRoutingKey(),communicationFailException.getRabbitMqMessage());
+            properties.setHeader("x-delay",(deathCnt+1)*5000);
+
+            messageSend.sendMessage(properties.getReceivedExchange(),properties.getReceivedRoutingKey(),communicationFailException.getRabbitMqMessage());
         } else if (ex instanceof InvalidMessageException) {
             // do nothing
-            System.out.println(ex.getMessage());
+            logger.info(ex.getMessage());
         }
-        else if(ex instanceof JsonFailException){
-
-            System.out.println("jsonfailed");
+        else if(ex instanceof JsonParseException){
+            logger.info("json failed");
             return;
         }
         else {

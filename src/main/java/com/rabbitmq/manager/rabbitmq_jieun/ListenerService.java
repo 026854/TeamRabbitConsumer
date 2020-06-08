@@ -20,27 +20,40 @@ public class ListenerService {
 
     private CafeReceiver cafeReceiver;
 
-    private MessageConvert messageConvert = new MessageConvert();
-
+    private String cup,straw;
 
     @HandleException
-    public void receive(Message message, String receiver) throws
-            Exception {
+    public void receive(Message message, String receiver) throws Exception {
         StopWatch watch = new StopWatch();
         watch.start();
 
-       QueueMessage queueMessage = messageConvert.getQueueMessage(message);
+        //메세지를 vo로
+        QueueMessage queueMessage = MessageConvert.getQueueMessage(message);
 
+        //invaild check
         if (queueMessage.getBeverageType() == null ||
         queueMessage.getId() ==null || queueMessage.getMenu() == null || queueMessage.getBase()==null ||queueMessage.getCore()==null||queueMessage.getDate()==null ) {
             throw new InvalidMessageException("value has null");
         }
+
+
+        //공통 로직
+        cup = getCup();
+        straw = getStraw();
+
+        //분기 로직
         cafeReceiver = factory.getCafeReceiver(queueMessage.getBeverageType());
-        cafeReceiver.make(message);
+        cafeReceiver.make(cup,straw,message);
 
         watch.stop();
 
 
+    }
+    private String getCup(){
+        return "Cup";
+    }
+    private String getStraw(){
+        return "Straw";
     }
     private void doWork(String in) throws InterruptedException {
         for (char ch : in.toCharArray()) {
