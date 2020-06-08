@@ -10,7 +10,7 @@ import java.io.IOException;
 
 @Component
 public abstract class CafeReceiver {
-    public abstract void make(Message message) throws Exception;
+    public abstract void make(String cup, String straw,Message message) throws Exception;
 
 
 }

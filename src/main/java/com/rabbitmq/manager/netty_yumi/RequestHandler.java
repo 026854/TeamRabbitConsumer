@@ -24,6 +24,7 @@ public class RequestHandler {
     private MessageConvert messageConvert = new MessageConvert();
 
     public void request(Message message) throws Exception {
+
         QueueMessage msg = messageConvert.getQueueMessage(message);
         String testMsg = msg.toString();
         Random random = new Random();

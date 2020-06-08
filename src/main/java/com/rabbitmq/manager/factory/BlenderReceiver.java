@@ -11,7 +11,7 @@ public class BlenderReceiver extends CafeReceiver{
     private RequestHandler requestHandler;
 
     @Override
-    public void make(Message message) throws Exception {
+    public void make(String cup, String straw,Message message) throws Exception {
 
         requestHandler.request(message);
     }
