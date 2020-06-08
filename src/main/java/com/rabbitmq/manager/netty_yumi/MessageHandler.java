@@ -1,20 +1,11 @@
 package com.rabbitmq.manager.netty_yumi;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.manager.config.BeanUtils;
-import com.rabbitmq.manager.send.MessageSend;
-import com.rabbitmq.manager.vo.Message;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
-import io.netty.util.AttributeKey;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 
@@ -27,19 +18,19 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
     Logger logger = LoggerFactory.getLogger(this.getClass());
     //final AttributeKey<Byte> taskType = AttributeKey.newInstance("taskType");
     ChannelGroup ChannelList;
-  //  private final ChannelGroup channelList;
-   RequestHandler requestHandler;
-  ResponseSync responseSync;
+    //  private final ChannelGroup channelList;
+    RequestHandler requestHandler;
+    ResponseSync responseSync;
 
-  public MessageHandler() {
+    public MessageHandler() {
     logger =  LoggerFactory.getLogger(this.getClass());
     ResponseMap = (HashMap<String, String>) BeanUtils.getBean("ResponseMap");
     ChannelList =(ChannelGroup) BeanUtils.getBean("ChannelList");
     requestHandler =(RequestHandler) BeanUtils.getBean("requestHandler");
     responseSync=(ResponseSync) BeanUtils.getBean("responseSync");
-  }
+    }
 
-  @Override
+    @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         //super.channelActive(ctx);
       if(ChannelList == null) logger.info("channel is null");
@@ -61,9 +52,8 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
         */
 
        //ResponseMap.put(msg.getBody(), "내용물");
-       responseSync.setResult(msg.getBody(),"내용물");
-      // ResponseMap.notifyAll();
-       logger.info("key 넣음"+ResponseMap.get("key"));
+       responseSync.setResult(msg.getBody(),"water");
+       //logger.info("key 넣음"+ResponseMap.get(msg.getBody()));
     }
 
 

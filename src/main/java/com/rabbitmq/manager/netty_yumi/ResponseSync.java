@@ -11,21 +11,27 @@ public class ResponseSync {
     @Autowired
     HashMap<String, String> ResponseMap;
 
-    public synchronized String getResult(String key) throws InterruptedException {
+    public String getResult(String key) throws InterruptedException {
         String res = null;
-        //ResponseMap.put(key,"test");
-        while(true){
-            if( (res =ResponseMap.get(key)) != null){
-                return res;
-            }else{
-                wait();
+        ResponseMap.put(key,"null");
+        while (true) {
+            synchronized (ResponseMap.get(key)) {
+                if ((res = ResponseMap.get(key)) != "null") {
+                    return res;
+                } else {
+                    ResponseMap.get(key).wait();
+                }
             }
         }
     }
 
-    public synchronized void setResult(String key, String value)  {
-        ResponseMap.put(key,value);
-        notifyAll();
-
+    public void setResult(String key, String value)  {
+        System.out.println(key+" - "+value+" 넣어줌 ");
+        //synchronized() {
+            ResponseMap.put(key, value);
+            ResponseMap.get(key).notifyAll();
+            System.out.println(key+" - "+value+" 넣어줌 ");
+           // ResponseMap.get(key).notifyAll();
+        //}
     }
 }

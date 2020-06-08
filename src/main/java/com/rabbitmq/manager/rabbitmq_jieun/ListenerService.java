@@ -40,7 +40,6 @@ public class ListenerService {
 
         watch.stop();
 
-       //여기서 콜백?
 
     }
     private void doWork(String in) throws InterruptedException {
