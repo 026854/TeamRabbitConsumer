@@ -48,7 +48,6 @@ public class ListenerService {
 
         watch.stop();
 
-       //여기서 콜백?
 
     }
     private String getCup(){
