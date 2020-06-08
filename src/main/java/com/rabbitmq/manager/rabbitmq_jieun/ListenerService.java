@@ -1,14 +1,11 @@
 package com.rabbitmq.manager.rabbitmq_jieun;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.manager.exception.HandleException;
+import com.rabbitmq.manager.exception.InvalidMessageException;
 import com.rabbitmq.manager.factory.CafeReceiver;
 import com.rabbitmq.manager.factory.CafeReceiverFactory;
-import com.rabbitmq.manager.netty_yumi.RequestHandler;
-import com.rabbitmq.manager.vo.Message;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
+import com.rabbitmq.manager.vo.QueueMessage;
+import org.springframework.amqp.core.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
@@ -23,29 +20,28 @@ public class ListenerService {
 
     private CafeReceiver cafeReceiver;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
-    @Autowired
-    RequestHandler requestHandler;
+    private MessageConvert messageConvert = new MessageConvert();
 
 
-    public void receive(String in, String receiver) throws
-            InterruptedException, JsonMappingException, JsonProcessingException {
+    @HandleException
+    public void receive(Message message, String receiver) throws
+            Exception {
         StopWatch watch = new StopWatch();
         watch.start();
-        System.out.println(in.getClass());
-        Message message = objectMapper.readValue(in, Message.class);
-        System.out.println("instance " + receiver + " [x] Received '"
-                + message.getId() + "'");
-        //doWork(message.getMenu());
 
-        cafeReceiver = factory.getCafeReceiver(message.getBeverageType());
+       QueueMessage queueMessage = messageConvert.getQueueMessage(message);
+
+        if (queueMessage.getBeverageType() == null ||
+        queueMessage.getId() ==null || queueMessage.getMenu() == null || queueMessage.getBase()==null ||queueMessage.getCore()==null||queueMessage.getDate()==null ) {
+            throw new InvalidMessageException("value has null");
+        }
+        cafeReceiver = factory.getCafeReceiver(queueMessage.getBeverageType());
         cafeReceiver.make(message);
 
         watch.stop();
-        //System.out.println("instance " + receiver + " [x] Done in "
-        //        + watch.getTotalTimeSeconds() + "s");
 
-        //requestHandler.request(message);
+       //여기서 콜백?
+
     }
     private void doWork(String in) throws InterruptedException {
         for (char ch : in.toCharArray()) {

@@ -16,6 +16,7 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +31,9 @@ public class RabbitConfiguration {
 	private static final String COFFEE_QUEUE_NAME = "coffee-queue";
 	private static final String BLENDER_QUEUE_NAME = "blender-queue";
 	private static final String NORMAL_QUEUE_NAME = "normal-queue";
+
 	private static final String DIRECT_EXCHANGE_NAME = "direct-exchange";
+
 
 	@Bean
 	public Manager manager() {
@@ -41,7 +44,16 @@ public class RabbitConfiguration {
 	DirectExchange exchange() {
 		return new DirectExchange(DIRECT_EXCHANGE_NAME);
 	}
-
+/////////////////////////////
+	@Bean
+	DirectExchange deadexchange() {
+		return new DirectExchange("coffee.dead");
+	}
+	@Bean
+	DirectExchange waitexchange() {
+		return new DirectExchange("coffee.wait");
+	}
+///////////////////////////////
 	@Bean
 	public Queue coffeeQueue() {
 		return new Queue(COFFEE_QUEUE_NAME);
@@ -58,19 +70,72 @@ public class RabbitConfiguration {
 		return new Queue(NORMAL_QUEUE_NAME);
 	}
 
+
+
+
+
+
+
+//////////////////////////////////////
 	@Bean
-	public Binding bindingWithCoffeeQueue(Queue coffeeQueue, DirectExchange exchange) {
-		return BindingBuilder.bind(coffeeQueue()).to(exchange).with("coffee");
+	public Queue cofeeDeadQueue() {
+		return new Queue("dead");
+		// durable 브로커가 재시작 할 때 남아있는지 여부
 	}
 	@Bean
+	public Queue coffeeWaitQueue() {
+		return new Queue("wait");
+		// durable 브로커가 재시작 할 때 남아있는지 여부
+	}
+
+///////////////////////////////////////
+
+
+
+
+
+
+
+
+	@Bean
+	public Binding bindingWithCoffeeQueue(Queue coffeeQueue, DirectExchange exchange) {
+		return BindingBuilder.bind(coffeeQueue()).to(exchange()).with("coffee");
+	}
+
+	@Bean
 	public Binding bindingWithBlenderQueue(Queue blenderQueue, DirectExchange exchange) {
-		return BindingBuilder.bind(blenderQueue()).to(exchange).with("blender");
+		return BindingBuilder.bind(blenderQueue()).to(exchange()).with("blender");
 	}
 
 	@Bean
 	Binding bindingWithNormalQueue(Queue normalQueue, DirectExchange exchange) {
-		return BindingBuilder.bind(normalQueue()).to(exchange).with("normal");
+		return BindingBuilder.bind(normalQueue()).to(exchange()).with("normal");
 	}
+
+
+
+
+
+
+
+//////////////////////////////////////
+	@Bean
+	Binding bindingWithDeadQueue(Queue normalQueue, DirectExchange exchange) {
+		return BindingBuilder.bind(cofeeDeadQueue()).to(deadexchange()).with("dead");
+	}
+	@Bean
+	Binding bindingWithWaitQueue(Queue normalQueue, DirectExchange exchange) {
+		return BindingBuilder.bind(coffeeWaitQueue()).to(waitexchange()).with("wait");
+	}
+
+
+
+///////////////////////////////////////
+
+
+
+
+
 
 	@Bean
 	public MessageConverter messageConverter() {
@@ -93,12 +158,15 @@ public class RabbitConfiguration {
 		factory.setConcurrentConsumers(1);
 		//factory.setMaxConcurrentConsumers(5);
 		factory.setMessageConverter(new Jackson2JsonMessageConverter());
+
 		return factory;
 	}
 	@Bean
 	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, MessageConverter messageConverter){
 		RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
 		rabbitTemplate.setMessageConverter(messageConverter);
+
+
 		return rabbitTemplate;
 	}
 

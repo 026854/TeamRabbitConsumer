@@ -1,10 +1,16 @@
 package com.rabbitmq.manager.factory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.rabbitmq.manager.vo.Message;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.manager.vo.QueueMessage;
+import org.springframework.amqp.core.Message;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @Component
-public interface CafeReceiver {
-    public void make(Message message) throws JsonProcessingException;
+public abstract class CafeReceiver {
+    public abstract void make(Message message) throws Exception;
+
+
 }

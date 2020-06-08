@@ -10,7 +10,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 @Slf4j
-public class MessageDecoderTest {
+public class QueueMessageDecoderTest {
 
     @Test
     public void 코덱_확인(){
