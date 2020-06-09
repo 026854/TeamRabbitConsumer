@@ -10,7 +10,6 @@ import io.netty.channel.group.ChannelGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 //@Component
@@ -18,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
 
 
-    ConcurrentHashMap<String, String> responseMap;
+    ConcurrentHashMap<String, String> channelResponse;
     Logger logger = LoggerFactory.getLogger(this.getClass());
     //final AttributeKey<Byte> taskType = AttributeKey.newInstance("taskType");
     ChannelGroup channelList;
@@ -27,7 +26,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
 
     public MessageHandler() {
         logger =  LoggerFactory.getLogger(this.getClass());
-        responseMap = (ConcurrentHashMap<String, String>) BeanUtils.getBean("responseMap");
+        channelResponse = (ConcurrentHashMap<String, String>) BeanUtils.getBean("channelResponse");
         channelList =(ChannelGroup) BeanUtils.getBean("channelList");
         requestHandler =(RequestHandler) BeanUtils.getBean("requestHandler");
         responseSync=(ResponseSync) BeanUtils.getBean("responseSync");
@@ -53,7 +52,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
         */
 
        responseSync.setResult(msg.getBody(),"water");
-       logger.info("key 넣음"+responseMap.get(msg.getBody()));
+       logger.info("key :"+msg.getBody()+"에 재료 주입" );
     }
 
 }
