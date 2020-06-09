@@ -7,8 +7,10 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.oio.OioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.channel.socket.oio.OioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
@@ -23,8 +25,8 @@ public class NettyClient {
 
     public void start(){
         clientBootstrap = new Bootstrap();
-        clientBootstrap.group(new NioEventLoopGroup())
-                .channel(NioSocketChannel.class)
+        clientBootstrap.group(new OioEventLoopGroup(2))
+                .channel(OioSocketChannel.class)
                 .handler(new ChannelInitializer<SocketChannel>() { //클라이언트 소켓 채널로 송수신 되는 데이터 가공 핸들러
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
@@ -39,11 +41,12 @@ public class NettyClient {
                     }
                 });
         connect();
-        //connect();
+        connect();
     }
 
     public ChannelFuture connect(){
         ChannelFuture channelFuture = clientBootstrap.connect("localhost", 8080);//channel
+        System.out.println("ch id"+channelFuture.channel().id());
         return channelFuture;
     }
 }

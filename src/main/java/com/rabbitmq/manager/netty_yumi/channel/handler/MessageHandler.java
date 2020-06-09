@@ -4,6 +4,7 @@ import com.rabbitmq.manager.config.BeanUtils;
 import com.rabbitmq.manager.netty_yumi.NettyMessage;
 import com.rabbitmq.manager.netty_yumi.RequestHandler;
 import com.rabbitmq.manager.netty_yumi.ResponseSync;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
 //@Component
 //@ChannelHandler.Sharable
@@ -23,6 +25,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
     ChannelGroup channelList;
     RequestHandler requestHandler;
     ResponseSync responseSync;
+    LinkedBlockingQueue<Channel> channelQueue;
 
     public MessageHandler() {
         logger =  LoggerFactory.getLogger(this.getClass());
@@ -30,11 +33,15 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
         channelList =(ChannelGroup) BeanUtils.getBean("channelList");
         requestHandler =(RequestHandler) BeanUtils.getBean("requestHandler");
         responseSync=(ResponseSync) BeanUtils.getBean("responseSync");
+        channelQueue= (LinkedBlockingQueue<Channel>)BeanUtils.getBean("channelQueue");
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         channelList.add(ctx.channel());
+        //channelQueue.offer(ctx.channel());
+        //offer vs add vs put
+        channelQueue.put(ctx.channel());
     }
 
     @Override
@@ -52,7 +59,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
         */
 
        responseSync.setResult(msg.getBody(),"water");
-       logger.info("key :"+msg.getBody()+"에 재료 주입" );
+       //logger.info("key :"+msg.getBody()+"에 재료 주입" );
     }
 
 }
