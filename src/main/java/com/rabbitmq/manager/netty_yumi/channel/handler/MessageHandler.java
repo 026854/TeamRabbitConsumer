@@ -18,24 +18,24 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
 
 
-    ConcurrentHashMap<String, String> ResponseMap;
+    ConcurrentHashMap<String, String> responseMap;
     Logger logger = LoggerFactory.getLogger(this.getClass());
     //final AttributeKey<Byte> taskType = AttributeKey.newInstance("taskType");
-    ChannelGroup ChannelList;
+    ChannelGroup channelList;
     RequestHandler requestHandler;
     ResponseSync responseSync;
 
     public MessageHandler() {
         logger =  LoggerFactory.getLogger(this.getClass());
-        ResponseMap = (ConcurrentHashMap<String, String>) BeanUtils.getBean("ResponseMap");
-        ChannelList =(ChannelGroup) BeanUtils.getBean("ChannelList");
+        responseMap = (ConcurrentHashMap<String, String>) BeanUtils.getBean("responseMap");
+        channelList =(ChannelGroup) BeanUtils.getBean("channelList");
         requestHandler =(RequestHandler) BeanUtils.getBean("requestHandler");
         responseSync=(ResponseSync) BeanUtils.getBean("responseSync");
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ChannelList.add(ctx.channel());
+        channelList.add(ctx.channel());
     }
 
     @Override
@@ -53,7 +53,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
         */
 
        responseSync.setResult(msg.getBody(),"water");
-       logger.info("key 넣음"+ResponseMap.get(msg.getBody()));
+       logger.info("key 넣음"+responseMap.get(msg.getBody()));
     }
 
 }
