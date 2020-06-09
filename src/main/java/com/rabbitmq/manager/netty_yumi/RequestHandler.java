@@ -1,5 +1,7 @@
 package com.rabbitmq.manager.netty_yumi;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.rabbitmq.manager.exception.CommunicationFailException;
 import com.rabbitmq.manager.rabbitmq_jieun.MessageConvert;
 import com.rabbitmq.manager.vo.QueueMessage;
 import io.netty.bootstrap.Bootstrap;
@@ -31,7 +33,7 @@ public class RequestHandler {
 
 
 
-    public String request(Message message) throws Exception {
+    public String request(Message message) throws JsonProcessingException {
         QueueMessage msg = MessageConvert.getQueueMessage(message);
         //초기화 될때까지 기다려야함.. 엠큐가 더 빨리 동작해 ㅠㅠ
         while(ChannelList.isEmpty()){
@@ -42,7 +44,11 @@ public class RequestHandler {
         //String request =msg.toString();
         String request = msg.getId();
         NettyMessage nettyMessage = new NettyMessage((byte)1,(byte)1,request.getBytes().length,request);
-        ChannelList.writeAndFlush(nettyMessage);
+        try {
+            ChannelList.writeAndFlush(nettyMessage);
+        }catch (Exception e){
+            throw new CommunicationFailException("netty faild",message);
+        }
         String key = msg.getId();
         String value = null;
         try {

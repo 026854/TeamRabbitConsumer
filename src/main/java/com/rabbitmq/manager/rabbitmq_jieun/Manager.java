@@ -20,7 +20,7 @@ public class Manager {
     private ListenerService listenerService;
 
 
-    @RabbitListener(queues = COFFEE_QUEUE_NAME)
+    @RabbitListener(queues = COFFEE_QUEUE_NAME,concurrency = "3")
     public void coffeeReceiver(Message message) throws Exception {
         System.out.println(" coffee-message:" + amqpAdmin.getQueueProperties(COFFEE_QUEUE_NAME).get("QUEUE_MESSAGE_COUNT"));
         listenerService.receive(message, "coffee");
