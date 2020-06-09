@@ -1,5 +1,6 @@
 package com.rabbitmq.manager.netty_yumi;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -7,10 +8,11 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@RequiredArgsConstructor
 public class ResponseSync {
 
-    @Autowired
-    ConcurrentHashMap<String, String> channelResponse;
+
+    private final ConcurrentHashMap<String, String> channelResponse;
 
     public String getResult(String key) throws InterruptedException {
         String res = null;
