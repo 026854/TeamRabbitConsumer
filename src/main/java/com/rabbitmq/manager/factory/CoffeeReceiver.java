@@ -1,5 +1,6 @@
 package com.rabbitmq.manager.factory;
 
+import com.rabbitmq.manager.exception.CommunicationFailException;
 import com.rabbitmq.manager.netty_yumi.RequestHandler;
 import com.rabbitmq.manager.send.MessageSend;
 import org.springframework.amqp.core.Exchange;

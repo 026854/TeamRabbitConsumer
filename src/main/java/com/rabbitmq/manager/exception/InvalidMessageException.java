@@ -10,4 +10,8 @@ public class InvalidMessageException extends CustomException{
     public InvalidMessageException(String errorMessage) {
         super(errorMessage);
     }
+    public InvalidMessageException(String errorMessage,Message message) {
+        super(errorMessage,message);
+    }
+
 }
