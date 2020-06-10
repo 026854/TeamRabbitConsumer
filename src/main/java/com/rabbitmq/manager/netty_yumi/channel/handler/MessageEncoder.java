@@ -1,5 +1,6 @@
-package com.rabbitmq.manager.netty_yumi;
+package com.rabbitmq.manager.netty_yumi.channel.handler;
 
+import com.rabbitmq.manager.netty_yumi.NettyMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
@@ -12,7 +13,7 @@ public class MessageEncoder extends MessageToByteEncoder<NettyMessage> {
     @Override
     protected void encode(ChannelHandlerContext ctx, NettyMessage msg, ByteBuf out) throws Exception {
         if(msg == null){
-            throw new Exception("message is null");
+            throw new Exception("Netty message is null");
         }
 
         out.writeByte(msg.getMessageType());

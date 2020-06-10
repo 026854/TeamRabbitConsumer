@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 @RequiredArgsConstructor
@@ -28,9 +30,10 @@ public class RequestHandler {
 
     private final ChannelGroup ChannelList;
     private final ResponseSync responseSync;
+    private final LinkedBlockingQueue<Channel> channelQueue;
+    private MessageConvert messageConvert = new MessageConvert();
     Logger logger =  LoggerFactory.getLogger(this.getClass());
-
-
+    AtomicInteger index = new AtomicInteger(0);
 
 
     public String request(Message message) throws JsonProcessingException {
@@ -38,25 +41,27 @@ public class RequestHandler {
         //초기화 될때까지 기다려야함.. 엠큐가 더 빨리 동작해 ㅠㅠ
         while(ChannelList.isEmpty()){
 
-        }
-        logger.info("request to channel: "+msg.toString());
-        logger.info("block id :"+msg.getId());
         //String request =msg.toString();
         String request = msg.getId();
         NettyMessage nettyMessage = new NettyMessage((byte)1,(byte)1,request.getBytes().length,request);
+
         try {
-            ChannelList.writeAndFlush(nettyMessage);
+             Channel channel = channelQueue.take();
+             channel.writeAndFlush(nettyMessage);
+             channelQueue.put(channel);
         }catch (Exception e){
             throw new CommunicationFailException("netty faild",message);
         }
+
         String key = msg.getId();
         String value = null;
         try {
             value = responseSync.getResult(key);
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        logger.info("자원 사용 완료 추출물 : "+value);
+       // logger.info("!!! response from channel:"+value);
         return value;
     }
 

@@ -1,37 +1,33 @@
 package com.rabbitmq.manager.netty_yumi;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@RequiredArgsConstructor
 public class ResponseSync {
 
-    @Autowired
-    HashMap<String, String> ResponseMap;
+
+    private final ConcurrentHashMap<String, String> channelResponse;
 
     public String getResult(String key) throws InterruptedException {
         String res = null;
-        ResponseMap.put(key,"null");
-        while (true) {
-            synchronized (ResponseMap.get(key)) {
-                if ((res = ResponseMap.get(key)) != "null") {
-                    return res;
-                } else {
-                    ResponseMap.get(key).wait();
-                }
-            }
+        channelResponse.put(key,"null");
+        synchronized (channelResponse.get(key)) {
+            channelResponse.get(key).wait();
+            res = channelResponse.get(key);
+            return res;
         }
     }
 
-    public void setResult(String key, String value)  {
-        System.out.println(key+" - "+value+" 넣어줌 ");
-        //synchronized() {
-            ResponseMap.put(key, value);
-            ResponseMap.get(key).notifyAll();
-            System.out.println(key+" - "+value+" 넣어줌 ");
-           // ResponseMap.get(key).notifyAll();
-        //}
+    public void setResult(String key, String value) throws InterruptedException {
+        synchronized(channelResponse.get(key)) {
+            channelResponse.get(key).notify();
+            channelResponse.put(key, value);
+        }
     }
 }

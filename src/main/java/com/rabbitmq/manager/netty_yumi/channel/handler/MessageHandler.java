@@ -1,40 +1,47 @@
-package com.rabbitmq.manager.netty_yumi;
+package com.rabbitmq.manager.netty_yumi.channel.handler;
 
 import com.rabbitmq.manager.config.BeanUtils;
+import com.rabbitmq.manager.netty_yumi.NettyMessage;
+import com.rabbitmq.manager.netty_yumi.RequestHandler;
+import com.rabbitmq.manager.netty_yumi.ResponseSync;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
 //@Component
 //@ChannelHandler.Sharable
 public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
 
 
-    HashMap<String, String> ResponseMap;
+    ConcurrentHashMap<String, String> channelResponse;
     Logger logger = LoggerFactory.getLogger(this.getClass());
     //final AttributeKey<Byte> taskType = AttributeKey.newInstance("taskType");
-    ChannelGroup ChannelList;
-    //  private final ChannelGroup channelList;
+    ChannelGroup channelList;
     RequestHandler requestHandler;
     ResponseSync responseSync;
+    LinkedBlockingQueue<Channel> channelQueue;
 
     public MessageHandler() {
-    logger =  LoggerFactory.getLogger(this.getClass());
-    ResponseMap = (HashMap<String, String>) BeanUtils.getBean("ResponseMap");
-    ChannelList =(ChannelGroup) BeanUtils.getBean("ChannelList");
-    requestHandler =(RequestHandler) BeanUtils.getBean("requestHandler");
-    responseSync=(ResponseSync) BeanUtils.getBean("responseSync");
+        logger =  LoggerFactory.getLogger(this.getClass());
+        channelResponse = (ConcurrentHashMap<String, String>) BeanUtils.getBean("channelResponse");
+        channelList =(ChannelGroup) BeanUtils.getBean("channelList");
+        requestHandler =(RequestHandler) BeanUtils.getBean("requestHandler");
+        responseSync=(ResponseSync) BeanUtils.getBean("responseSync");
+        channelQueue= (LinkedBlockingQueue<Channel>)BeanUtils.getBean("channelQueue");
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        //super.channelActive(ctx);
-      if(ChannelList == null) logger.info("channel is null");
-      ChannelList.add(ctx.channel());
+        channelList.add(ctx.channel());
+        //channelQueue.offer(ctx.channel());
+        //offer vs add vs put
+        channelQueue.put(ctx.channel());
     }
 
     @Override
@@ -51,21 +58,8 @@ public class MessageHandler extends SimpleChannelInboundHandler<NettyMessage> {
         }
         */
 
-       //ResponseMap.put(msg.getBody(), "내용물");
        responseSync.setResult(msg.getBody(),"water");
-       //logger.info("key 넣음"+ResponseMap.get(msg.getBody()));
+       //logger.info("key :"+msg.getBody()+"에 재료 주입" );
     }
 
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        super.exceptionCaught(ctx, cause);
-    }
-
-
-
-    @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        super.userEventTriggered(ctx, evt);
-    }
 }
